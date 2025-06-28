@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -27,7 +28,7 @@ function QuickAccessCard({ title, description, href, icon: Icon }: QuickAccessCa
       <CardContent>
         <p className="text-xs text-muted-foreground mb-4">{description}</p>
         <Button variant="outline" size="sm" asChild>
-          <Link href={href}>Go to {title.split(' ')[0]}</Link>
+          <Link href={href}>Ir a {title.split(' ')[0]}</Link>
         </Button>
       </CardContent>
     </Card>
@@ -130,30 +131,29 @@ export default function AdminDashboardPage() {
     <div className="space-y-8">
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle className="font-headline text-3xl text-primary">Admin Dashboard</CardTitle>
-          <CardDescription>Welcome to the ONLYfansLY Admin Panel. Manage your platform content and settings here.</CardDescription>
+          <CardTitle className="font-headline text-3xl text-primary">Panel de Administración</CardTitle>
+          <CardDescription>Bienvenido al Panel de Administración de ONLYfansLY. Gestiona el contenido y la configuración de tu plataforma aquí.</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="mb-6">
-            From here, you can manage courses, configure livestream settings, update homepage content, and much more.
-            Use the sidebar navigation to access different sections of the admin panel.
+            Desde aquí, puedes gestionar cursos, configurar ajustes de transmisión en vivo, actualizar el contenido de la página de inicio y mucho más. Usa la navegación de la barra lateral para acceder a las diferentes secciones del panel de administración.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <QuickAccessCard
-              title="Manage Courses"
-              description="Add, edit, or remove courses available on your platform."
+              title="Gestionar Cursos"
+              description="Añade, edita o elimina cursos disponibles en tu plataforma."
               href="/admin/courses"
               icon={Edit3}
             />
             <QuickAccessCard
-              title="Livestream Settings"
-              description="Configure your live stream URL and availability."
+              title="Ajustes de Livestream"
+              description="Configura la URL y disponibilidad de tu transmisión en vivo."
               href="/admin/livestream"
               icon={Settings}
             />
             <QuickAccessCard
-              title="General Configuration"
-              description="Update site-wide settings, appearance, and admin account details."
+              title="Configuración General"
+              description="Actualiza los ajustes de todo el sitio, la apariencia y los detalles de la cuenta de administrador."
               href="/admin/configuration/general"
               icon={Settings}
             />
@@ -163,13 +163,13 @@ export default function AdminDashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Platform Overview</CardTitle>
+          <CardTitle className="font-headline text-2xl">Resumen de la Plataforma</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <InfoBox title="Total Courses" value={stats.courses} isLoading={isLoading} icon={BookOpen} />
-          <InfoBox title="Active Users" value={stats.users} isLoading={isLoading} icon={Users} />
-          <InfoBox title="Approved Stories" value={stats.stories} isLoading={isLoading} icon={FileCheck2} />
-          <InfoBox title="Live Viewers" value={stats.liveViewers} isLoading={false} icon={Radio} />
+          <InfoBox title="Cursos Totales" value={stats.courses} isLoading={isLoading} icon={BookOpen} />
+          <InfoBox title="Usuarios Activos" value={stats.users} isLoading={isLoading} icon={Users} />
+          <InfoBox title="Historias Aprobadas" value={stats.stories} isLoading={isLoading} icon={FileCheck2} />
+          <InfoBox title="Espectadores en Vivo" value={stats.liveViewers} isLoading={false} icon={Radio} />
         </CardContent>
       </Card>
     </div>

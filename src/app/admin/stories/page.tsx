@@ -64,7 +64,7 @@ export default function AdminStoriesPage() {
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to load stories settings or list.",
+          description: "No se pudieron cargar los ajustes o la lista de historias.",
           variant: "destructive",
         });
       } finally {
@@ -84,7 +84,7 @@ export default function AdminStoriesPage() {
     startSettingsTransition(async () => {
       const result = await saveStorySettingsAction(settingsData);
       toast({
-        title: result.success ? "Success!" : "Error",
+        title: result.success ? "¡Éxito!" : "Error",
         description: result.message,
         variant: result.success ? "default" : "destructive",
       });
@@ -96,7 +96,7 @@ export default function AdminStoriesPage() {
       const result = await updateStoryStatusAction(storyId, newStatus);
       if (result.success) {
         setStories(prev => prev.map(s => s.id === storyId ? { ...s, status: newStatus, approvedAt: newStatus === 'approved' ? Timestamp.now() : s.approvedAt } : s));
-        toast({ title: "Success", description: result.message });
+        toast({ title: "¡Éxito!", description: result.message });
       } else {
         toast({ title: "Error", description: result.message, variant: "destructive" });
       }
@@ -108,7 +108,7 @@ export default function AdminStoriesPage() {
       const result = await deleteAdminStoryAction(storyId);
       if (result.success) {
         setStories(prev => prev.filter(s => s.id !== storyId));
-        toast({ title: "Success", description: result.message });
+        toast({ title: "¡Éxito!", description: result.message });
       } else {
         toast({ title: "Error", description: result.message, variant: "destructive" });
       }
@@ -131,15 +131,15 @@ export default function AdminStoriesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-headline font-bold text-primary">Manage Stories</h1>
-          <p className="text-muted-foreground">Approve, reject, and manage user-submitted stories. Configure global story settings.</p>
+          <h1 className="text-3xl font-headline font-bold text-primary">Gestionar Historias</h1>
+          <p className="text-muted-foreground">Aprueba, rechaza y gestiona las historias enviadas por los usuarios. Configura los ajustes globales de las historias.</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><SettingsIcon className="h-5 w-5 text-primary"/> Global Story Settings</CardTitle>
-          <CardDescription>Control how stories are submitted and displayed.</CardDescription>
+          <CardTitle className="flex items-center gap-2"><SettingsIcon className="h-5 w-5 text-primary"/> Configuración Global de Historias</CardTitle>
+          <CardDescription>Controla cómo se envían y se muestran las historias.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-2">
@@ -148,10 +148,10 @@ export default function AdminStoriesPage() {
               checked={allowUserSubmission} 
               onCheckedChange={setAllowUserSubmission}
             />
-            <Label htmlFor="allowUserSubmission">Allow Users to Submit Stories</Label>
+            <Label htmlFor="allowUserSubmission">Permitir a los Usuarios Enviar Historias</Label>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="defaultEditWindowMinutes">User Edit Window (minutes after approval)</Label>
+            <Label htmlFor="defaultEditWindowMinutes">Ventana de Edición para el Usuario (minutos después de la aprobación)</Label>
             <Input 
               id="defaultEditWindowMinutes" 
               type="number" 
@@ -161,41 +161,41 @@ export default function AdminStoriesPage() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="defaultStoryVideoPreviewUrl">Default Video Preview Image URL (for stories without own image)</Label>
+            <Label htmlFor="defaultStoryVideoPreviewUrl">URL de Imagen de Previsualización de Video por Defecto (para historias sin imagen propia)</Label>
             <Input 
               id="defaultStoryVideoPreviewUrl" 
               value={defaultStoryVideoPreviewUrl} 
               onChange={(e) => setDefaultStoryVideoPreviewUrl(e.target.value)} 
               placeholder="https://example.com/default-video-preview.png"
             />
-             <p className="text-xs text-muted-foreground">This image will be used as a thumbnail if a story has a video but no specific image URL.</p>
+             <p className="text-xs text-muted-foreground">Esta imagen se usará como miniatura si una historia tiene un video pero no una URL de imagen específica.</p>
           </div>
         </CardContent>
         <CardFooter>
           <Button onClick={handleSaveStorySettings} disabled={isSavingSettings}>
-            {isSavingSettings ? 'Saving Settings...' : 'Save Story Settings'}
+            {isSavingSettings ? 'Guardando Configuración...' : 'Guardar Configuración de Historias'}
           </Button>
         </CardFooter>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Story Moderation Queue</CardTitle>
-          <CardDescription>Review, approve, or reject submitted stories.</CardDescription>
+          <CardTitle>Cola de Moderación de Historias</CardTitle>
+          <CardDescription>Revisa, aprueba o rechaza las historias enviadas.</CardDescription>
         </CardHeader>
         <CardContent>
           {stories.length === 0 ? (
-             <p className="text-center text-muted-foreground py-8">No stories submitted yet.</p>
+             <p className="text-center text-muted-foreground py-8">Aún no se han enviado historias.</p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[60px]">Preview</TableHead>
-                  <TableHead>User</TableHead>
-                  <TableHead>Caption (Excerpt)</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Submitted</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="w-[60px]">Vista Previa</TableHead>
+                  <TableHead>Usuario</TableHead>
+                  <TableHead>Leyenda (Extracto)</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Enviado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -222,7 +222,7 @@ export default function AdminStoriesPage() {
                             <span className="font-medium text-sm">{story.userName || 'N/A'}</span>
                         </div>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground max-w-xs truncate">{story.caption || "No caption"}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground max-w-xs truncate">{story.caption || "Sin leyenda"}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 text-xs rounded-full font-medium ${
                         story.status === 'approved' ? 'bg-green-100 text-green-700' :
@@ -238,40 +238,40 @@ export default function AdminStoriesPage() {
                     <TableCell className="text-right space-x-1">
                       {story.status === 'pending' && (
                         <>
-                          <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleStoryStatusChange(story.id, 'approved')} disabled={isProcessingStory} title="Approve">
+                          <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleStoryStatusChange(story.id, 'approved')} disabled={isProcessingStory} title="Aprobar">
                             <CheckCircle className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700" onClick={() => handleStoryStatusChange(story.id, 'rejected')} disabled={isProcessingStory} title="Reject">
+                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700" onClick={() => handleStoryStatusChange(story.id, 'rejected')} disabled={isProcessingStory} title="Rechazar">
                             <XCircle className="h-4 w-4" />
                           </Button>
                         </>
                       )}
                       {story.status === 'approved' && (
-                         <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700" onClick={() => handleStoryStatusChange(story.id, 'rejected')} disabled={isProcessingStory} title="Reject/Unpublish">
+                         <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700" onClick={() => handleStoryStatusChange(story.id, 'rejected')} disabled={isProcessingStory} title="Rechazar/Despublicar">
                             <XCircle className="h-4 w-4" />
                           </Button>
                       )}
                        <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={isProcessingStory} title="Delete">
+                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={isProcessingStory} title="Eliminar">
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the story.
+                              Esta acción no se puede deshacer. Esto eliminará permanentemente la historia.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel disabled={isProcessingStory}>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel disabled={isProcessingStory}>Cancelar</AlertDialogCancel>
                             <AlertDialogAction 
                               onClick={() => handleDeleteStory(story.id)} 
                               disabled={isProcessingStory}
                               className="bg-destructive hover:bg-destructive/90"
                             >
-                              {isProcessingStory ? 'Deleting...' : 'Delete'}
+                              {isProcessingStory ? 'Eliminando...' : 'Eliminar'}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
