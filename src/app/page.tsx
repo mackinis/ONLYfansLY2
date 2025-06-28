@@ -55,7 +55,9 @@ export default function HomePage() {
     mainText: generalSettings?.heroMainText || siteConfig.defaultHero.mainText,
     secondaryText: generalSettings?.heroSecondaryText || siteConfig.defaultHero.secondaryText,
     descriptionText: generalSettings?.heroDescriptionText || siteConfig.defaultHero.descriptionText,
-    mainTextColor: generalSettings?.heroMainTextColor || siteConfig.defaultHero.mainTextColor,
+    mainTextColor: generalSettings?.heroMainTextColor, // Pass through, component has default
+    heroSecondaryTextColor: generalSettings?.heroSecondaryTextColor, // Pass through, component has default
+    heroDescriptionTextColor: generalSettings?.heroDescriptionTextColor, // Pass through, component has default
     heroImageUrl: generalSettings?.heroImageUrl || siteConfig.defaultHero.heroImageUrl,
   };
   

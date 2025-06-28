@@ -22,6 +22,9 @@ export default function AdminConfigGeneralPage() {
   const [heroDescriptionText, setHeroDescriptionText] = useState('');
   const [heroImageUrl, setHeroImageUrl] = useState('');
   const [heroMainTextColor, setHeroMainTextColor] = useState('#FFFFFF');
+  const [heroSecondaryTextColor, setHeroSecondaryTextColor] = useState('#EE82EE');
+  const [heroDescriptionTextColor, setHeroDescriptionTextColor] = useState('#F5F5F5');
+
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, startTransition] = useTransition();
@@ -42,6 +45,8 @@ export default function AdminConfigGeneralPage() {
           setHeroDescriptionText(settings.heroDescriptionText || '');
           setHeroImageUrl(settings.heroImageUrl || '');
           setHeroMainTextColor(settings.heroMainTextColor || '#FFFFFF');
+          setHeroSecondaryTextColor(settings.heroSecondaryTextColor || '#EE82EE');
+          setHeroDescriptionTextColor(settings.heroDescriptionTextColor || '#F5F5F5');
         }
       } catch (error) {
         toast({
@@ -66,6 +71,8 @@ export default function AdminConfigGeneralPage() {
       heroDescriptionText,
       heroImageUrl,
       heroMainTextColor,
+      heroSecondaryTextColor,
+      heroDescriptionTextColor,
     };
 
     startTransition(async () => {
@@ -169,9 +176,23 @@ export default function AdminConfigGeneralPage() {
               <Label htmlFor="heroSecondaryText">Titular Secundario</Label>
               <Input id="heroSecondaryText" value={heroSecondaryText} onChange={(e) => setHeroSecondaryText(e.target.value)} placeholder="Ej: Tu Universo de Streams" />
             </div>
+             <div className="space-y-2">
+              <Label htmlFor="heroSecondaryTextColor">Color del Titular Secundario</Label>
+              <div className="flex items-center gap-2">
+                  <Input id="heroSecondaryTextColor" type="color" value={heroSecondaryTextColor} onChange={(e) => setHeroSecondaryTextColor(e.target.value)} className="p-1 h-10 w-14" />
+                  <Input type="text" value={heroSecondaryTextColor.toUpperCase()} onChange={(e) => setHeroSecondaryTextColor(e.target.value)} placeholder="#EE82EE" />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="heroDescriptionText">Texto Descriptivo</Label>
               <Textarea id="heroDescriptionText" value={heroDescriptionText} onChange={(e) => setHeroDescriptionText(e.target.value)} placeholder="Ej: Descubre contenido increíble..." rows={3} />
+            </div>
+             <div className="space-y-2">
+              <Label htmlFor="heroDescriptionTextColor">Color del Texto Descriptivo</Label>
+              <div className="flex items-center gap-2">
+                  <Input id="heroDescriptionTextColor" type="color" value={heroDescriptionTextColor} onChange={(e) => setHeroDescriptionTextColor(e.target.value)} className="p-1 h-10 w-14" />
+                  <Input type="text" value={heroDescriptionTextColor.toUpperCase()} onChange={(e) => setHeroDescriptionTextColor(e.target.value)} placeholder="#F5F5F5" />
+              </div>
             </div>
              <div className="space-y-2">
               <Label htmlFor="heroImageUrl">URL de Imagen de Fondo (Opcional)</Label>

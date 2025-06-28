@@ -1,61 +1,46 @@
 
-import { Header } from "@/components/layout/header";
-// Footer is now in RootLayout
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
+import { getSetting, type PolicySettings } from '@/services/settingsService';
 
-export default function AboutPage() {
+const defaultAboutHtmlContent = `<div class="space-y-4 text-center">
+  <p class="font-semibold text-xl text-accent">Nuestra Misión</p>
+  <p>
+    En ONLYfansLY, nuestra misión es proporcionar una plataforma dinámica y atractiva para el aprendizaje y la interacción en vivo. Creemos en el poder del conocimiento y las experiencias compartidas para conectar e inspirar a personas de todo el mundo. Nos esforzamos por ofrecer cursos de alta calidad, transmisiones en vivo fluidas y herramientas interactivas que satisfagan a una audiencia diversa, fomentando una comunidad de aprendices, creadores y entusiastas.
+  </p>
+</div>
+<div class="space-y-4 text-center">
+  <h2 class="text-2xl font-headline font-semibold text-accent">Nuestra Visión</h2>
+  <p>
+    Ser el principal destino en línea donde la creatividad se encuentra con la educación, y donde cada individuo tiene la oportunidad de aprender, compartir y crecer. Visualizamos un universo digital donde los eventos en vivo y los cursos bajo demanda coexisten para crear una experiencia rica e interactiva.
+  </p>
+</div>
+<div class="space-y-4">
+  <h2 class="text-2xl font-headline font-semibold text-accent text-center">Nuestros Valores</h2>
+  <ul class="list-disc list-inside space-y-3 max-w-2xl mx-auto">
+    <li><span class="font-semibold text-primary">Innovación:</span> Evolucionar continuamente nuestra plataforma con la última tecnología para ofrecer una experiencia de usuario superior y herramientas de vanguardia.</li>
+    <li><span class="font-semibold text-primary">Comunidad:</span> Fomentar un entorno de apoyo, respeto e interacción, donde los miembros puedan colaborar, aprender unos de otros y construir conexiones significativas.</li>
+    <li><span class="font-semibold text-primary">Calidad:</span> Comprometernos con la excelencia en todo lo que hacemos, desde el contenido de nuestros cursos hasta la fiabilidad de nuestra tecnología y el soporte que ofrecemos.</li>
+    <li><span class="font-semibold text-primary">Accesibilidad:</span> Esforzarnos por hacer que el aprendizaje y los eventos en vivo sean accesibles para todos, en cualquier lugar, eliminando barreras y promoviendo la inclusión.</li>
+  </ul>
+</div>`;
+
+export default async function AboutPage() {
+  const settings = await getSetting<PolicySettings>('policies');
+  const content = settings?.aboutHtmlContent || defaultAboutHtmlContent;
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* <Header /> Header is in RootLayout */}
       <main className="flex-grow container mx-auto px-4 py-12 md:py-20">
-        <Card className="shadow-xl">
+        <Card className="shadow-xl max-w-4xl mx-auto">
           <CardHeader>
-            <CardTitle className="text-4xl md:text-5xl font-headline text-center text-primary">About ONLYfansLY</CardTitle>
+            <CardTitle className="text-4xl md:text-5xl font-headline text-center text-primary">Sobre Nosotros</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-8 text-lg">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="md:w-1/2">
-                 <Image 
-                    src="https://placehold.co/800x600.png" 
-                    alt="ONLYfansLY Team" 
-                    width={800} 
-                    height={600} 
-                    className="rounded-lg shadow-md"
-                    data-ai-hint="team collaboration"
-                  />
-              </div>
-              <div className="md:w-1/2 space-y-4">
-                <p className="font-semibold text-xl">Our Mission</p>
-                <p>
-                  At ONLYfansLY, our mission is to provide a dynamic and engaging platform for learning and live interaction. We believe in the power of shared knowledge and experiences to connect and inspire people globally.
-                </p>
-                <p>
-                  We strive to offer high-quality courses, seamless live streaming, and interactive tools that cater to a diverse audience, fostering a community of learners, creators, and enthusiasts.
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <h2 className="text-2xl font-headline font-semibold text-accent">Our Vision</h2>
-              <p>
-                To be the leading online destination where creativity meets education, and where every individual has the opportunity to learn, share, and grow. We envision a verse where live events and on-demand courses coexist to create a rich, interactive experience.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="text-2xl font-headline font-semibold text-accent">Our Values</h2>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li><span className="font-semibold">Innovation:</span> Continuously evolving our platform with the latest technology.</li>
-                <li><span className="font-semibold">Community:</span> Fostering a supportive and interactive environment.</li>
-                <li><span className="font-semibold">Quality:</span> Delivering excellence in content and user experience.</li>
-                <li><span className="font-semibold">Accessibility:</span> Making learning and live events available to everyone, everywhere.</li>
-              </ul>
-            </div>
-          </CardContent>
+          <CardContent 
+            className="space-y-8 text-lg text-foreground/90"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
         </Card>
       </main>
-      {/* <Footer /> Footer is in RootLayout */}
     </div>
   );
 }

@@ -12,6 +12,8 @@ export interface GeneralSettings {
   heroDescriptionText?: string;
   heroImageUrl?: string;
   heroMainTextColor?: string;
+  heroSecondaryTextColor?: string;
+  heroDescriptionTextColor?: string;
 }
 
 export type StreamVisibility = 'public' | 'private' | 'exclusive' | 'disabled';
@@ -84,6 +86,16 @@ export interface AppMobilesSettings {
   iosUrl?: string;
   iosBrand?: string;
   iosIconUrl?: string;
+}
+
+export interface PolicySettings {
+  aboutHtmlContent?: string;
+  privacyHtmlContent?: string;
+  termsHtmlContent?: string;
+  showPrivacyDate?: boolean;
+  privacyDateText?: string;
+  showTermsDate?: boolean;
+  termsDateText?: string;
 }
 
 

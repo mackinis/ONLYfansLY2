@@ -62,6 +62,7 @@ export const siteConfig = {
         { title: "General", href: "/admin/configuration/general", icon: SlidersHorizontal },
         { title: "Apariencia", href: "/admin/configuration/appearance", icon: Palette },
         { title: "Cuenta Admin", href: "/admin/configuration/account", icon: UserCog },
+        { title: "Políticas", href: "/admin/configuration/policies", icon: FileText },
       ],
     },
   ] satisfies NavItem[],

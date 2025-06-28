@@ -6,6 +6,8 @@ interface HeroBannerProps {
   descriptionText?: string;
   heroImageUrl?: string;
   mainTextColor?: string;
+  heroSecondaryTextColor?: string;
+  heroDescriptionTextColor?: string;
 }
 
 export function HeroBanner({
@@ -13,7 +15,9 @@ export function HeroBanner({
   secondaryText = "Secondary Headline",
   descriptionText = "Description text for the hero banner.",
   heroImageUrl,
-  mainTextColor = "#FFFFFF"
+  mainTextColor = "#FFFFFF",
+  heroSecondaryTextColor = "#EE82EE", // Matches default --accent HSL
+  heroDescriptionTextColor = "#F5F5F5" // Matches default --foreground HSL
 }: HeroBannerProps) {
   return (
     <div className="relative bg-gradient-to-br from-primary via-purple-600 to-pink-500 text-primary-foreground py-20 md:py-32 rounded-lg shadow-xl overflow-hidden mb-12">
@@ -38,10 +42,16 @@ export function HeroBanner({
         >
           {mainText}
         </h1>
-        <h2 className="font-headline text-2xl md:text-3xl text-accent mb-6 animate-fade-in-up [animation-delay:0.3s]">
+        <h2 
+          className="font-headline text-2xl md:text-3xl mb-6 animate-fade-in-up [animation-delay:0.3s]"
+          style={{ color: heroSecondaryTextColor }}
+        >
           {secondaryText}
         </h2>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 animate-fade-in-up [animation-delay:0.6s] font-body">
+        <p 
+          className="text-lg md:text-xl max-w-2xl mx-auto mb-8 animate-fade-in-up [animation-delay:0.6s] font-body"
+          style={{ color: heroDescriptionTextColor }}
+        >
           {descriptionText}
         </p>
       </div>
