@@ -151,19 +151,22 @@ const SocketHandler = (req: NextApiRequest, res: NextApiResponseWithSocket) => {
         livePageSockets.delete(socket.id);
       });
 
-      socket.on('admin:start-general-stream', (data) => {
-        if (!socket.data.isAdmin) return;
-        generalStreamBroadcaster = { socketId: socket.id, ...data };
-        io.emit('server:general-stream-info', { 
-            title: generalStreamBroadcaster.title,
-            subtitle: generalStreamBroadcaster.subtitle,
-        });
-        livePageSockets.forEach(viewerSocketId => {
-            if (viewerSocketId !== socket.id) {
-                io.to(generalStreamBroadcaster!.socketId).emit('server:new-viewer-request', { viewerSocketId });
-            }
-        });
-      });
+socket.on('admin:start-general-stream', (data) => {
+    if (!socket.data.isAdmin) return;
+    generalStreamBroadcaster = { socketId: socket.id, ...data };
+
+    // Avisa a todos los viewers que hay un stream
+    livePageSockets.forEach(viewerSocketId => {
+        if (viewerSocketId !== socket.id) {
+            io.to(viewerSocketId).emit('server:general-stream-info', { 
+                title: generalStreamBroadcaster!.title,
+                subtitle: generalStreamBroadcaster!.subtitle
+            });
+            io.to(generalStreamBroadcaster!.socketId).emit('server:new-viewer-request', { viewerSocketId });
+        }
+    });
+});
+
 
       socket.on('admin:end-general-stream', () => {
         if (generalStreamBroadcaster?.socketId === socket.id) {
