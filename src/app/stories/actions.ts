@@ -18,8 +18,8 @@ const addStoryActionSchema = zod.object({
   mediaUrl: zod.string().min(1, {message: 'Se requiere una URL de imagen o video/iframe.'}).refine(val => val.startsWith('http') || val.startsWith('<iframe'), { message: 'Por favor, introduce una URL válida o código iframe.'}),
   caption: zod.string().max(500).optional(),
   // User data passed in
-  userId: zod.string().min(1),
-  userName: zod.string().min(1),
+  userId: zod.string().min(1, { message: 'Required user ID.'}),
+  userName: zod.string().min(1, { message: 'Required user name.'}),
   userAvatar: zod.string().url().optional().or(zod.literal('')),
 });
 

@@ -147,7 +147,7 @@ export default function AdminEditStoryPage() {
                             {errors.caption && <p className="text-sm text-destructive">{errors.caption.message}</p>}
                         </div>
                          <div className="space-y-2">
-                            <Label htmlFor="imageUrl">URL de Imagen</Label>
+                            <Label htmlFor="imageUrl">URL de imagen de vista previa</Label>
                             <Input id="imageUrl" {...register("imageUrl")} disabled={isSaving}/>
                             {errors.imageUrl && <p className="text-sm text-destructive">{errors.imageUrl.message}</p>}
                         </div>

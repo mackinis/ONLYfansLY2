@@ -334,8 +334,8 @@ export function Footer() {
           {showAppMobilesSection && (
              <div className="flex flex-col items-start space-y-2">
                 <h3 className="font-semibold mb-1 text-foreground">Descarga la App</h3>
-                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isIosBtnEnabled}>
-                  <a href={isIosBtnEnabled ? iosLink : '#'} onClick={!isIosBtnEnabled ? (e) => e.preventDefault() : undefined} target={isIosBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
+                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" >
+                  <a href={isIosBtnEnabled ? iosLink : '#'} onClick={!isIosBtnEnabled ? (e) => e.preventDefault() : undefined} target={isIosBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2"  aria-disabled={!isIosBtnEnabled}>
                     {iosIconUrl ? (
                       <Image src={iosIconUrl} alt={`${iosBrand || 'iOS'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultIosIcon ? (
@@ -344,8 +344,8 @@ export function Footer() {
                     {iosBrand || 'App Store'}
                   </a>
                 </Button>
-                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isAndroidBtnEnabled}>
-                  <a href={isAndroidBtnEnabled ? androidLink : '#'} onClick={!isAndroidBtnEnabled ? (e) => e.preventDefault() : undefined} target={isAndroidBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
+                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start">
+                  <a href={isAndroidBtnEnabled ? androidLink : '#'} onClick={!isAndroidBtnEnabled ? (e) => e.preventDefault() : undefined} target={isAndroidBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2" aria-disabled={!isAndroidBtnEnabled}>
                       {androidIconUrl ? (
                       <Image src={androidIconUrl} alt={`${androidBrand || 'Android'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultAndroidIcon ? (
