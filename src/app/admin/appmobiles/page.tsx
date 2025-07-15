@@ -139,7 +139,7 @@ export default function AdminAppMobilesPage() {
         <CardContent className="space-y-6">
           <div className="flex items-center space-x-2">
             <Switch id="showAndroidButton" checked={showAndroidButton} onCheckedChange={setShowAndroidButton} />
-            <Label htmlFor="showAndroidButton">Mostrar botón de descarga para Android</Label>
+            <Label htmlFor="showAndroidButton">Activar botón de descarga para Android</Label>
           </div>
           <div className="space-y-2">
             <Label htmlFor="androidUrl">Google Play Store URL</Label>
@@ -165,7 +165,7 @@ export default function AdminAppMobilesPage() {
         <CardContent className="space-y-6">
            <div className="flex items-center space-x-2">
             <Switch id="showIosButton" checked={showIosButton} onCheckedChange={setShowIosButton} />
-            <Label htmlFor="showIosButton">Mostrar botón de descarga para iOS</Label>
+            <Label htmlFor="showIosButton">Activar botón de descarga para iOS</Label>
           </div>
           <div className="space-y-2">
             <Label htmlFor="iosUrl">Apple App Store URL</Label>
