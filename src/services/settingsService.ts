@@ -59,9 +59,11 @@ export interface AppearanceSettings {
   backgroundColor?: string;
   logoFile?: string; 
   logoExternalUrl?: string;
+  showBrandNameHeader?: boolean;
   showLogoFooter?: boolean;
   showBrandNameFooter?: boolean;
   brandNameFooter?: string;
+  logoPositioning?: number;
 }
 
 export interface StorySettings {
@@ -80,12 +82,15 @@ export interface SocialMediaSettings {
 }
 
 export interface AppMobilesSettings {
+  enableAppMobilesSection?: boolean;
   androidUrl?: string;
   androidBrand?: string;
   androidIconUrl?: string;
+  showAndroidButton?: boolean;
   iosUrl?: string;
   iosBrand?: string;
   iosIconUrl?: string;
+  showIosButton?: boolean;
 }
 
 export interface PolicySettings {

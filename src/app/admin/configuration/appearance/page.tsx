@@ -11,20 +11,24 @@ import { useToast } from "@/hooks/use-toast";
 import { getSetting, updateSetting, AppearanceSettings } from '@/services/settingsService';
 import { saveAppearanceSettingsAction } from './actions';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Slider } from '@/components/ui/slider';
 
 const DEFAULT_PRIMARY_COLOR = "#FF69B4";
 const DEFAULT_ACCENT_COLOR = "#EE82EE";
 const DEFAULT_BACKGROUND_COLOR = "#222222";
+const DEFAULT_LOGO_POSITION = 0;
 
 export default function AdminConfigAppearancePage() {
   const [primaryColor, setPrimaryColor] = useState(DEFAULT_PRIMARY_COLOR);
   const [accentColor, setAccentColor] = useState(DEFAULT_ACCENT_COLOR);
   const [backgroundColor, setBackgroundColor] = useState(DEFAULT_BACKGROUND_COLOR);
   const [logoExternalUrl, setLogoExternalUrl] = useState('');
-  // TODO: Add state for logoFile upload
   const [showLogoFooter, setShowLogoFooter] = useState(true);
+  const [showBrandNameHeader, setShowBrandNameHeader] = useState(false);
   const [showBrandNameFooter, setShowBrandNameFooter] = useState(true);
   const [brandNameFooter, setBrandNameFooter] = useState("ONLYfansLY");
+  const [logoPositioning, setLogoPositioning] = useState([DEFAULT_LOGO_POSITION]);
+
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, startTransition] = useTransition();
@@ -40,9 +44,11 @@ export default function AdminConfigAppearancePage() {
           setAccentColor(settings.accentColor || DEFAULT_ACCENT_COLOR);
           setBackgroundColor(settings.backgroundColor || DEFAULT_BACKGROUND_COLOR);
           setLogoExternalUrl(settings.logoExternalUrl || '');
+          setShowBrandNameHeader(settings.showBrandNameHeader === undefined ? false : settings.showBrandNameHeader);
           setShowLogoFooter(settings.showLogoFooter === undefined ? true : settings.showLogoFooter);
           setShowBrandNameFooter(settings.showBrandNameFooter === undefined ? true : settings.showBrandNameFooter);
           setBrandNameFooter(settings.brandNameFooter || "ONLYfansLY");
+          setLogoPositioning([settings.logoPositioning || DEFAULT_LOGO_POSITION]);
         }
       } catch (error) {
         toast({
@@ -63,10 +69,11 @@ export default function AdminConfigAppearancePage() {
       accentColor,
       backgroundColor,
       logoExternalUrl,
-      // logoFile will be handled separately if file upload is implemented
+      showBrandNameHeader,
       showLogoFooter,
       showBrandNameFooter,
       brandNameFooter,
+      logoPositioning: logoPositioning[0],
     };
     startTransition(async () => {
       const result = await saveAppearanceSettingsAction(settingsData);
@@ -75,7 +82,6 @@ export default function AdminConfigAppearancePage() {
           title: "¡Éxito!",
           description: result.message,
         });
-        // TODO: Add logic to dynamically update CSS variables or reload styles if needed
       } else {
         toast({
           title: "Error",
@@ -187,6 +193,28 @@ export default function AdminConfigAppearancePage() {
             />
             <p className="text-xs text-muted-foreground">Si se proporciona, esta URL se usará para el logo.</p>
           </div>
+          <div className="space-y-2 pt-2">
+            <Label htmlFor="logoPositioning">Posicionamiento del Logo (Navbar)</Label>
+            <Slider
+                id="logoPositioning"
+                min={0}
+                max={100}
+                step={1}
+                value={logoPositioning}
+                onValueChange={setLogoPositioning}
+            />
+            <p className="text-xs text-muted-foreground">
+                Ajusta la separación del logo respecto al borde izquierdo. 0 = pegado a la izquierda, 100 = centrado en el espacio disponible. Valor actual: {logoPositioning[0]}%
+            </p>
+          </div>
+          <div className="flex items-center space-x-2 pt-2">
+            <Switch 
+              id="showBrandNameHeader" 
+              checked={showBrandNameHeader} 
+              onCheckedChange={setShowBrandNameHeader} 
+            />
+            <Label htmlFor="showBrandNameHeader">Mostrar Nombre de la Marca en Header</Label>
+          </div>
            <div className="flex items-center space-x-2 pt-2">
             <Switch 
               id="showLogoFooter" 
@@ -204,7 +232,7 @@ export default function AdminConfigAppearancePage() {
             <Label htmlFor="showBrandNameFooter">Mostrar Nombre de la Marca en Pie de Página</Label>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="brandNameFooter">Texto del Nombre de la Marca (si se muestra)</Label>
+            <Label htmlFor="brandNameFooter">Texto del Nombre de la Marca</Label>
             <Input 
               id="brandNameFooter" 
               value={brandNameFooter} 

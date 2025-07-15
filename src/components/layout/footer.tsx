@@ -126,6 +126,11 @@ export function Footer() {
 
   const socialLinksToDisplay: SocialMediaLink[] = socialMediaSettings?.links?.filter(link => link.platform && link.url).length ? socialMediaSettings.links.filter(link => link.platform && link.url) : siteConfig.socialLinks.map(sl => ({ platform: sl.platform, url: sl.href }));
   
+  // App Mobiles Settings
+  const showAppMobilesSection = appMobilesSettings?.enableAppMobilesSection === undefined ? true : appMobilesSettings.enableAppMobilesSection;
+  const isAndroidBtnEnabled = appMobilesSettings?.showAndroidButton === undefined ? true : appMobilesSettings.showAndroidButton;
+  const isIosBtnEnabled = appMobilesSettings?.showIosButton === undefined ? true : appMobilesSettings.showIosButton;
+  
   const iosLink = appMobilesSettings?.iosUrl || siteConfig.appDownloadLinks.ios.url;
   const iosBrand = appMobilesSettings?.iosBrand || siteConfig.appDownloadLinks.ios.brand;
   const iosIconUrl = appMobilesSettings?.iosIconUrl;
@@ -303,11 +308,11 @@ export function Footer() {
           </div>
 
           {/* Column 5: Download App */}
-          <div className="flex flex-col items-start space-y-2">
-             <h3 className="font-semibold mb-1 text-foreground">Descarga la App</h3>
-              {iosLink && (
-                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start">
-                  <a href={iosLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+          {showAppMobilesSection && (
+             <div className="flex flex-col items-start space-y-2">
+                <h3 className="font-semibold mb-1 text-foreground">Descarga la App</h3>
+                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isIosBtnEnabled}>
+                  <a href={isIosBtnEnabled ? iosLink : undefined} onClick={!isIosBtnEnabled ? (e) => e.preventDefault() : undefined} target={isIosBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
                     {iosIconUrl ? (
                       <Image src={iosIconUrl} alt={`${iosBrand || 'iOS'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultIosIcon ? (
@@ -316,11 +321,9 @@ export function Footer() {
                     {iosBrand || 'App Store'}
                   </a>
                 </Button>
-              )}
-              {androidLink && (
-                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start">
-                  <a href={androidLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                     {androidIconUrl ? (
+                <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isAndroidBtnEnabled}>
+                  <a href={isAndroidBtnEnabled ? androidLink : undefined} onClick={!isAndroidBtnEnabled ? (e) => e.preventDefault() : undefined} target={isAndroidBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
+                      {androidIconUrl ? (
                       <Image src={androidIconUrl} alt={`${androidBrand || 'Android'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultAndroidIcon ? (
                       <DefaultAndroidIcon className="mr-2 h-5 w-5" />
@@ -328,8 +331,8 @@ export function Footer() {
                     {androidBrand || 'Google Play'}
                   </a>
                 </Button>
-              )}
-            </div>
+              </div>
+          )}
         </div>
         
         <div className="text-center text-sm text-muted-foreground mt-8 pt-8 border-t border-border">
@@ -339,3 +342,5 @@ export function Footer() {
     </footer>
   );
 }
+
+    

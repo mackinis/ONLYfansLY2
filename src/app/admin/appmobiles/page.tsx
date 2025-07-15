@@ -11,15 +11,19 @@ import { getSetting, type AppMobilesSettings } from '@/services/settingsService'
 import { saveAppMobilesSettingsAction } from './actions';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Smartphone } from 'lucide-react';
+import { Switch } from '@/components/ui/switch'; // Import Switch
 
 export default function AdminAppMobilesPage() {
   // State for all form fields
+  const [enableAppMobilesSection, setEnableAppMobilesSection] = useState(true);
   const [androidUrl, setAndroidUrl] = useState('');
   const [androidBrand, setAndroidBrand] = useState('');
   const [androidIconUrl, setAndroidIconUrl] = useState('');
+  const [showAndroidButton, setShowAndroidButton] = useState(true);
   const [iosUrl, setIosUrl] = useState('');
   const [iosBrand, setIosBrand] = useState('');
   const [iosIconUrl, setIosIconUrl] = useState('');
+  const [showIosButton, setShowIosButton] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, startTransition] = useTransition();
@@ -31,12 +35,15 @@ export default function AdminAppMobilesPage() {
       try {
         const settings = await getSetting<AppMobilesSettings>('app_mobiles');
         if (settings) {
+          setEnableAppMobilesSection(settings.enableAppMobilesSection === undefined ? true : settings.enableAppMobilesSection);
           setAndroidUrl(settings.androidUrl || '');
           setAndroidBrand(settings.androidBrand || '');
           setAndroidIconUrl(settings.androidIconUrl || '');
+          setShowAndroidButton(settings.showAndroidButton === undefined ? true : settings.showAndroidButton);
           setIosUrl(settings.iosUrl || '');
           setIosBrand(settings.iosBrand || '');
           setIosIconUrl(settings.iosIconUrl || '');
+          setShowIosButton(settings.showIosButton === undefined ? true : settings.showIosButton);
         }
       } catch (error) {
         toast({
@@ -53,12 +60,15 @@ export default function AdminAppMobilesPage() {
 
   const handleSaveSettings = async () => {
     const settingsData: AppMobilesSettings = {
+      enableAppMobilesSection,
       androidUrl,
       androidBrand,
       androidIconUrl,
+      showAndroidButton,
       iosUrl,
       iosBrand,
       iosIconUrl,
+      showIosButton,
     };
     startTransition(async () => {
       const result = await saveAppMobilesSettingsAction(settingsData);
@@ -104,12 +114,33 @@ export default function AdminAppMobilesPage() {
           <p className="text-muted-foreground">Configura los enlaces de descarga para tus apps de Android e iOS.</p>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+            <CardTitle>Configuración General de la Sección</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <div className="flex items-center space-x-2">
+                <Switch 
+                  id="enableAppMobilesSection" 
+                  checked={enableAppMobilesSection} 
+                  onCheckedChange={setEnableAppMobilesSection} 
+                />
+                <Label htmlFor="enableAppMobilesSection">Mostrar sección de descarga de apps en el pie de página</Label>
+            </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Configuración de Android</CardTitle>
           <CardDescription>Introduce los detalles para la app en Google Play Store.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="flex items-center space-x-2">
+            <Switch id="showAndroidButton" checked={showAndroidButton} onCheckedChange={setShowAndroidButton} />
+            <Label htmlFor="showAndroidButton">Mostrar botón de descarga para Android</Label>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="androidUrl">Google Play Store URL</Label>
             <Input id="androidUrl" value={androidUrl} onChange={(e) => setAndroidUrl(e.target.value)} placeholder="https://play.google.com/store/apps/details?id=..." />
@@ -132,6 +163,10 @@ export default function AdminAppMobilesPage() {
           <CardDescription>Introduce los detalles para la app en la Apple App Store.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+           <div className="flex items-center space-x-2">
+            <Switch id="showIosButton" checked={showIosButton} onCheckedChange={setShowIosButton} />
+            <Label htmlFor="showIosButton">Mostrar botón de descarga para iOS</Label>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="iosUrl">Apple App Store URL</Label>
             <Input id="iosUrl" value={iosUrl} onChange={(e) => setIosUrl(e.target.value)} placeholder="https://apps.apple.com/app/your-app/id..." />

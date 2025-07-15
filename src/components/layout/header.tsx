@@ -22,7 +22,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { io, type Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
+import { cn } from '@/lib/utils';
 
 
 const USER_SESSION_KEY = 'onlyfansly_user_session';
@@ -82,6 +83,8 @@ export function Header() {
     socket.on('SETTINGS_WERE_UPDATED', (data: { type: string, settings: any }) => {
         if (data.type === 'livestream') {
             setLivestreamSettings(data.settings);
+        } else if (data.type === 'appearance') {
+            setAppearanceSettings(data.settings);
         }
     });
 
@@ -142,6 +145,9 @@ export function Header() {
 
   const liveStreamVisibility = livestreamSettings?.visibility || 'disabled';
   const logoUrlToDisplay = appearanceSettings?.logoExternalUrl;
+  const logoPositioning = appearanceSettings?.logoPositioning || 0;
+  const showBrandName = appearanceSettings?.showBrandNameHeader || false;
+  const brandName = appearanceSettings?.brandNameFooter || siteConfig.name;
 
   let displayLiveButton = false;
   if (!isLoadingSettings && liveStreamVisibility !== 'disabled') {
@@ -161,98 +167,35 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          {isLoadingSettings ? <Skeleton className="h-10 w-32" /> : 
-            logoUrlToDisplay ? (
-              <Image 
-                src={logoUrlToDisplay} 
-                alt={siteConfig.name + " Logo"} 
-                width={150} 
-                height={40} 
-                className="h-10 object-contain" 
-                style={{ width: 'auto' }} 
-                priority 
-                data-ai-hint="logo brand"
-              />
-            ) : (
-              <AppLogo />
-            )
-          }
-        </Link>
         
-        <nav className="hidden md:flex items-center space-x-4 text-sm font-medium">
-          {siteConfig.mainNav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="transition-colors hover:text-primary"
-            >
-              {item.title}
-            </Link>
-          ))}
-          {displayLiveButton && (
-            <Button variant="default" size="sm" asChild className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity">
-              <Link href="/live">
-                <Radio className="mr-2 h-4 w-4" />
-                Live
-              </Link>
-            </Button>
-          )}
-          {isLoadingAuth ? (
-            <Skeleton className="h-9 w-24 rounded-md" />
-          ) : isUserLoggedIn && currentUser ? (
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={currentUser.avatarUrl} alt={`${currentUser.firstName} ${currentUser.lastName}`} />
-                      <AvatarFallback className="bg-primary text-primary-foreground">{userInitials}</AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {currentUser.firstName || ''} {currentUser.lastName || ''}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {currentUser.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">
-                      <UserIconLucide className="mr-2 h-4 w-4" />
-                      Mi Cuenta
-                    </Link>
-                  </DropdownMenuItem>
-                  {currentUser.role === 'admin' && (
-                    <DropdownMenuItem asChild>
-                      <Link href="/admin">
-                        <Settings className="mr-2 h-4 w-4" />
-                        Admin Panel
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive focus:bg-destructive/10">
-                    <LogOutIcon className="mr-2 h-4 w-4" />
-                    Cerrar Sesión
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-          ) : (
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/login">
-                <LogIn className="mr-2 h-4 w-4" />
-                Login / Register
-              </Link>
-            </Button> 
-          )}
-        </nav>
-
+        {/* Logo container with dynamic margin */}
+        <div className="flex-shrink-0" style={{ marginLeft: `${logoPositioning}%` }}>
+          <Link href="/" className="flex items-center space-x-2">
+            {isLoadingSettings ? <Skeleton className="h-10 w-32" /> : 
+              logoUrlToDisplay ? (
+                <Image 
+                  src={logoUrlToDisplay} 
+                  alt={siteConfig.name + " Logo"} 
+                  width={150} 
+                  height={40} 
+                  className="h-10 object-contain" 
+                  style={{ width: 'auto' }} 
+                  priority 
+                  data-ai-hint="logo brand"
+                />
+              ) : (
+                <AppLogo />
+              )
+            }
+             {showBrandName && (
+              <span className={cn("font-headline text-xl font-bold hidden md:inline-block", logoUrlToDisplay ? "ml-3" : "ml-0")}>
+                {brandName}
+              </span>
+            )}
+          </Link>
+        </div>
+        
+        {/* Mobile menu trigger - remains on the far right */}
         <div className="md:hidden flex items-center">
           {isLoadingAuth ? (
             <Skeleton className="h-9 w-9 rounded-full mr-2" />
@@ -340,6 +283,85 @@ export function Header() {
               </nav>
             </SheetContent>
           </Sheet>
+        </div>
+
+        {/* Desktop navigation and auth - grouped together and pushed to the right */}
+        <div className="hidden md:flex items-center space-x-6 ml-auto">
+          <nav className="flex items-center space-x-4 text-sm font-medium">
+            {siteConfig.mainNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="transition-colors hover:text-primary"
+              >
+                {item.title}
+              </Link>
+            ))}
+            {displayLiveButton && (
+              <Button variant="default" size="sm" asChild className="bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-opacity">
+                <Link href="/live">
+                  <Radio className="mr-2 h-4 w-4" />
+                  Live
+                </Link>
+              </Button>
+            )}
+          </nav>
+          
+          <div className="flex items-center">
+            {isLoadingAuth ? (
+              <Skeleton className="h-9 w-24 rounded-md" />
+            ) : isUserLoggedIn && currentUser ? (
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                      <Avatar className="h-9 w-9">
+                        <AvatarImage src={currentUser.avatarUrl} alt={`${currentUser.firstName} ${currentUser.lastName}`} />
+                        <AvatarFallback className="bg-primary text-primary-foreground">{userInitials}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {currentUser.firstName || ''} {currentUser.lastName || ''}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {currentUser.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">
+                        <UserIconLucide className="mr-2 h-4 w-4" />
+                        Mi Cuenta
+                      </Link>
+                    </DropdownMenuItem>
+                    {currentUser.role === 'admin' && (
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                      <LogOutIcon className="mr-2 h-4 w-4" />
+                      Cerrar Sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            ) : (
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/login">
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Login / Register
+                </Link>
+              </Button> 
+            )}
+          </div>
         </div>
       </div>
     </header>
