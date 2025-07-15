@@ -26,6 +26,7 @@ export interface StoryData {
   title?: string;
   imageUrl?: string;
   videoUrl?: string;
+  videoPreviewUrl?: string; 
   caption?: string;
   status: StoryStatus;
   createdAt?: Timestamp;
@@ -45,7 +46,9 @@ export const storySchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters.").optional(),
   imageUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
   videoUrl: z.string().optional(),
+  videoPreviewUrl: z.string().url({ message: "Please enter a valid image URL." }).optional().or(z.literal('')),
   caption: z.string().max(500, "Caption can be max 500 characters.").optional().or(z.literal('')),
+  approvedAt: z.date().optional(),
 }).refine(data => data.imageUrl || data.videoUrl, {
   message: "Either an image URL or a video URL/iframe is required.",
   path: ["imageUrl"], 
@@ -134,7 +137,10 @@ export async function updateStory(id: string, storyData: Partial<StoryData>): Pr
     if (storyData.status === 'approved' && !storyData.approvedAt) {
         updateData.approvedAt = Timestamp.now();
     }
-    await updateDoc(docRef, updateData);
+    if (storyData.approvedAt instanceof Date) {
+        updateData.approvedAt = Timestamp.fromDate(storyData.approvedAt);
+    }
+    await updateDoc(docRef, updateData as any);
   } catch (error) {
     console.error("Error updating story: ", error);
     throw new Error("Failed to update story.");

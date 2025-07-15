@@ -47,6 +47,7 @@ export default function AdminEditCoursePage() {
             price: course.price || '',
             duration: course.duration || '',
             date: course.date || '',
+            thumbnailUrl: course.thumbnailUrl || '',
             imageUrl: course.imageUrl || '',
             courseVideoUrl: course.courseVideoUrl || '',
             videoPreviewUrl: course.videoPreviewUrl || '',
@@ -120,6 +121,7 @@ export default function AdminEditCoursePage() {
             <div className="space-y-2"><Skeleton className="h-4 w-1/5" /><Skeleton className="h-10 w-full" /></div>
             <div className="space-y-2"><Skeleton className="h-4 w-1/5" /><Skeleton className="h-10 w-full" /></div>
             <div className="space-y-2"><Skeleton className="h-4 w-1/5" /><Skeleton className="h-10 w-full" /></div>
+            <div className="space-y-2"><Skeleton className="h-4 w-1/5" /><Skeleton className="h-10 w-full" /></div>
           </CardContent>
           <CardFooter>
             <Skeleton className="h-10 w-32" />
@@ -177,6 +179,13 @@ export default function AdminEditCoursePage() {
                 <Input id="date" {...register("date")} type="date" placeholder="Ej: 2024-10-26" />
                 {errors.date && <p className="text-sm text-destructive">{errors.date.message}</p>}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="thumbnailUrl">URL de Miniatura para Admin (Opcional)</Label>
+              <Input id="thumbnailUrl" {...register("thumbnailUrl")} placeholder="https://ejemplo.com/miniatura.png" />
+              <p className="text-xs text-muted-foreground">Esta imagen se mostrará en la lista de cursos del panel de administración.</p>
+              {errors.thumbnailUrl && <p className="text-sm text-destructive">{errors.thumbnailUrl.message}</p>}
             </div>
 
             <div className="space-y-2">

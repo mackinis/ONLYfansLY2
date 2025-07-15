@@ -22,9 +22,14 @@ type StorySubmissionFormData = z.infer<typeof storySubmissionClientSchema>;
 
 interface StorySubmissionFormProps {
   onSuccess?: () => void; // Callback for successful submission
+  user: {
+    id: string;
+    name: string;
+    avatarUrl?: string;
+  }
 }
 
-export function StorySubmissionForm({ onSuccess }: StorySubmissionFormProps) {
+export function StorySubmissionForm({ onSuccess, user }: StorySubmissionFormProps) {
   const { toast } = useToast();
   const [isSubmitting, startTransition] = useTransition();
 
@@ -39,7 +44,15 @@ export function StorySubmissionForm({ onSuccess }: StorySubmissionFormProps) {
 
   const onSubmit: SubmitHandler<StorySubmissionFormData> = async (data) => {
     startTransition(async () => {
-      const result = await addStoryAction(data);
+      
+      const payload = {
+        ...data,
+        userId: user.id,
+        userName: user.name,
+        userAvatar: user.avatarUrl
+      };
+
+      const result = await addStoryAction(payload);
       
       if (result.success) {
         toast({

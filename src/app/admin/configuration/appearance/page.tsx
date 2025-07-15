@@ -17,6 +17,7 @@ const DEFAULT_PRIMARY_COLOR = "#FF69B4";
 const DEFAULT_ACCENT_COLOR = "#EE82EE";
 const DEFAULT_BACKGROUND_COLOR = "#222222";
 const DEFAULT_LOGO_POSITION = 0;
+const DEFAULT_BRAND_NAME_COLOR = "#FFFFFF";
 
 export default function AdminConfigAppearancePage() {
   const [primaryColor, setPrimaryColor] = useState(DEFAULT_PRIMARY_COLOR);
@@ -25,6 +26,7 @@ export default function AdminConfigAppearancePage() {
   const [logoExternalUrl, setLogoExternalUrl] = useState('');
   const [showLogoFooter, setShowLogoFooter] = useState(true);
   const [showBrandNameHeader, setShowBrandNameHeader] = useState(false);
+  const [brandNameHeaderColor, setBrandNameHeaderColor] = useState(DEFAULT_BRAND_NAME_COLOR);
   const [showBrandNameFooter, setShowBrandNameFooter] = useState(true);
   const [brandNameFooter, setBrandNameFooter] = useState("ONLYfansLY");
   const [logoPositioning, setLogoPositioning] = useState([DEFAULT_LOGO_POSITION]);
@@ -45,6 +47,7 @@ export default function AdminConfigAppearancePage() {
           setBackgroundColor(settings.backgroundColor || DEFAULT_BACKGROUND_COLOR);
           setLogoExternalUrl(settings.logoExternalUrl || '');
           setShowBrandNameHeader(settings.showBrandNameHeader === undefined ? false : settings.showBrandNameHeader);
+          setBrandNameHeaderColor(settings.brandNameHeaderColor || DEFAULT_BRAND_NAME_COLOR);
           setShowLogoFooter(settings.showLogoFooter === undefined ? true : settings.showLogoFooter);
           setShowBrandNameFooter(settings.showBrandNameFooter === undefined ? true : settings.showBrandNameFooter);
           setBrandNameFooter(settings.brandNameFooter || "ONLYfansLY");
@@ -70,6 +73,7 @@ export default function AdminConfigAppearancePage() {
       backgroundColor,
       logoExternalUrl,
       showBrandNameHeader,
+      brandNameHeaderColor,
       showLogoFooter,
       showBrandNameFooter,
       brandNameFooter,
@@ -177,7 +181,7 @@ export default function AdminConfigAppearancePage() {
           <CardTitle>Logo y Marca</CardTitle>
           <CardDescription>Gestiona el logo de tu sitio y el nombre de la marca.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="logoUpload">Subir Logo (SVG, PNG)</Label>
             <Input id="logoUpload" type="file" />
@@ -215,6 +219,17 @@ export default function AdminConfigAppearancePage() {
             />
             <Label htmlFor="showBrandNameHeader">Mostrar Nombre de la Marca en Header</Label>
           </div>
+
+          {showBrandNameHeader && (
+            <div className="space-y-2 pl-6">
+              <Label htmlFor="brandNameHeaderColor">Color del Nombre de la Marca</Label>
+              <div className="flex items-center gap-2">
+                  <Input id="brandNameHeaderColor" type="color" value={brandNameHeaderColor} onChange={(e) => setBrandNameHeaderColor(e.target.value)} className="p-1 h-10 w-14" />
+                  <Input type="text" value={brandNameHeaderColor.toUpperCase()} onChange={(e) => setBrandNameHeaderColor(e.target.value)} placeholder="#FFFFFF" className="max-w-[120px]"/>
+              </div>
+            </div>
+          )}
+
            <div className="flex items-center space-x-2 pt-2">
             <Switch 
               id="showLogoFooter" 

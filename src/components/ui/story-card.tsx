@@ -23,11 +23,13 @@ function isIframeString(str: string): boolean {
 export function StoryCard({ story, defaultVideoPreviewUrl }: StoryCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Updated logic for display image
   let displayImageUrl = "https://placehold.co/300x500/777/FFFFFF.png?text=Story"; // Default placeholder
   if (story.imageUrl) {
     displayImageUrl = story.imageUrl;
   } else if (story.videoUrl) {
-    displayImageUrl = defaultVideoPreviewUrl || "https://placehold.co/300x500/FF69B4/FFFFFF.png?text=Video+Preview";
+    // Use story-specific preview if available, otherwise fall back to global default
+    displayImageUrl = story.videoPreviewUrl || defaultVideoPreviewUrl || "https://placehold.co/300x500/FF69B4/FFFFFF.png?text=Video+Preview";
   }
   
   const dataAiHint = story.imageUrl ? 'story image' : story.videoUrl ? 'story video preview' : 'placeholder';

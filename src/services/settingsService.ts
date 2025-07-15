@@ -60,6 +60,7 @@ export interface AppearanceSettings {
   logoFile?: string; 
   logoExternalUrl?: string;
   showBrandNameHeader?: boolean;
+  brandNameHeaderColor?: string;
   showLogoFooter?: boolean;
   showBrandNameFooter?: boolean;
   brandNameFooter?: string;

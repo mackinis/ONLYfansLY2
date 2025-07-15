@@ -32,6 +32,7 @@ interface UserSessionData {
   lastName?: string;
   role?: string;
   isVerified: boolean;
+  avatarUrl?: string;
 }
 
 const platformIcons: { [key: string]: LucideIcon } = {
@@ -116,6 +117,7 @@ export function Footer() {
 
 
   const isUserLoggedIn = !!currentUser;
+  const isUserVerified = !!currentUser?.isVerified;
 
   const showLogoInFooter = appearanceSettings?.showLogoFooter === undefined ? true : appearanceSettings.showLogoFooter;
   const showBrandNameInFooter = appearanceSettings?.showBrandNameFooter === undefined ? false : appearanceSettings.showBrandNameFooter;
@@ -256,12 +258,33 @@ export function Footer() {
                     </DialogTitle>
                   </DialogHeader>
                   {isUserLoggedIn ? (
-                    <>
-                    <DialogDescription>
-                      Comparte tu momento con la comunidad. Sube una imagen o un video (URL o iframe).
-                    </DialogDescription>
-                    <StorySubmissionForm onSuccess={() => setIsStoryModalOpen(false)} />
-                    </>
+                    isUserVerified ? (
+                      <>
+                        <DialogDescription>
+                          Comparte tu momento con la comunidad. Sube una imagen o un video (URL o iframe).
+                        </DialogDescription>
+                        <StorySubmissionForm 
+                          onSuccess={() => setIsStoryModalOpen(false)}
+                          user={{
+                            id: currentUser.uid,
+                            name: `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() || 'Usuario Anónimo',
+                            avatarUrl: currentUser.avatarUrl
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <div className="py-4 text-center">
+                        <p className="text-muted-foreground mb-4">
+                          Debes verificar tu cuenta para poder crear una historia. Por favor, revisa tu correo electrónico.
+                        </p>
+                         <Button asChild className="w-full">
+                          <Link href={`/verify-account?uid=${currentUser.uid}`}>
+                            <LogIn className="mr-2 h-4 w-4" />
+                            Ir a Verificar Cuenta
+                          </Link>
+                         </Button>
+                      </div>
+                    )
                   ) : (
                     <div className="py-4 text-center">
                       <p className="text-muted-foreground mb-4">
@@ -312,7 +335,7 @@ export function Footer() {
              <div className="flex flex-col items-start space-y-2">
                 <h3 className="font-semibold mb-1 text-foreground">Descarga la App</h3>
                 <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isIosBtnEnabled}>
-                  <a href={isIosBtnEnabled ? iosLink : undefined} onClick={!isIosBtnEnabled ? (e) => e.preventDefault() : undefined} target={isIosBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
+                  <a href={isIosBtnEnabled ? iosLink : '#'} onClick={!isIosBtnEnabled ? (e) => e.preventDefault() : undefined} target={isIosBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
                     {iosIconUrl ? (
                       <Image src={iosIconUrl} alt={`${iosBrand || 'iOS'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultIosIcon ? (
@@ -322,7 +345,7 @@ export function Footer() {
                   </a>
                 </Button>
                 <Button asChild variant="outline" className="min-w-[180px] w-auto justify-start text-foreground hover:bg-accent hover:text-accent-foreground border-input self-start" disabled={!isAndroidBtnEnabled}>
-                  <a href={isAndroidBtnEnabled ? androidLink : undefined} onClick={!isAndroidBtnEnabled ? (e) => e.preventDefault() : undefined} target={isAndroidBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
+                  <a href={isAndroidBtnEnabled ? androidLink : '#'} onClick={!isAndroidBtnEnabled ? (e) => e.preventDefault() : undefined} target={isAndroidBtnEnabled ? "_blank" : "_self"} rel="noopener noreferrer" className="flex items-center gap-2">
                       {androidIconUrl ? (
                       <Image src={androidIconUrl} alt={`${androidBrand || 'Android'} icon`} width={20} height={20} className="mr-2 h-5 w-5 object-contain" />
                     ) : DefaultAndroidIcon ? (
@@ -342,5 +365,3 @@ export function Footer() {
     </footer>
   );
 }
-
-    

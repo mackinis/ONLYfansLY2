@@ -32,6 +32,7 @@ export default function AdminNewCoursePage() {
       price: '',
       duration: '',
       date: '',
+      thumbnailUrl: '',
       imageUrl: '',
       courseVideoUrl: '',
       videoPreviewUrl: '',
@@ -112,6 +113,13 @@ export default function AdminNewCoursePage() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="thumbnailUrl">URL de Miniatura para Admin (Opcional)</Label>
+              <Input id="thumbnailUrl" {...register("thumbnailUrl")} placeholder="https://ejemplo.com/miniatura.png" />
+              <p className="text-xs text-muted-foreground">Esta imagen se mostrará en la lista de cursos del panel de administración.</p>
+              {errors.thumbnailUrl && <p className="text-sm text-destructive">{errors.thumbnailUrl.message}</p>}
+            </div>
+            
             <div className="space-y-2">
               <Label htmlFor="imageUrl">URL de Imagen para la Tarjeta (Opcional)</Label>
               <Input id="imageUrl" {...register("imageUrl")} placeholder="https://ejemplo.com/imagen.png" />

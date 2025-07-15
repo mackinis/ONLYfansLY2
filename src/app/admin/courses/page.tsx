@@ -156,7 +156,7 @@ export default function AdminCoursesPage() {
                   <TableRow key={course.id}>
                     <TableCell>
                       <Image 
-                        src={course.imageUrl || "https://placehold.co/100x100.png"} 
+                        src={course.thumbnailUrl || course.imageUrl || "https://placehold.co/100x100.png"} 
                         alt={course.title}
                         width={60}
                         height={60}

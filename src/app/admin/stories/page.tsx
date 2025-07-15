@@ -11,12 +11,13 @@ import { useToast } from "@/hooks/use-toast";
 import { getSetting, type StorySettings } from '@/services/settingsService';
 import { saveStorySettingsAction, updateStoryStatusAction, deleteAdminStoryAction } from './actions'; // Import server actions
 import { Skeleton } from '@/components/ui/skeleton';
-import { PlusCircle, Settings as SettingsIcon, Trash2, CheckCircle, XCircle, Edit3, Eye, UserCircle as UserCircleIcon } from "lucide-react"; // Added UserCircleIcon
+import { PlusCircle, Settings as SettingsIcon, Trash2, CheckCircle, XCircle, Edit3, Eye, UserCircle as UserCircleIcon, Undo2 } from "lucide-react"; // Added UserCircleIcon & Undo2
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getAdminStories, type Story } from '@/services/storyService';
 import { Timestamp } from 'firebase/firestore';
 import Image from 'next/image';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'; // Import Avatar components
+import Link from 'next/link';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -91,7 +92,7 @@ export default function AdminStoriesPage() {
     });
   };
 
-  const handleStoryStatusChange = async (storyId: string, newStatus: 'approved' | 'rejected') => {
+  const handleStoryStatusChange = async (storyId: string, newStatus: 'approved' | 'rejected' | 'pending') => {
     startStoryProcessTransition(async () => {
       const result = await updateStoryStatusAction(storyId, newStatus);
       if (result.success) {
@@ -203,7 +204,7 @@ export default function AdminStoriesPage() {
                   <TableRow key={story.id}>
                     <TableCell>
                       <Image 
-                        src={story.imageUrl || (story.videoUrl && defaultStoryVideoPreviewUrl) || "https://placehold.co/100x100.png"} 
+                        src={story.imageUrl || story.videoPreviewUrl || (story.videoUrl && defaultStoryVideoPreviewUrl) || "https://placehold.co/100x100.png"} 
                         alt="Story preview"
                         width={40}
                         height={40}
@@ -236,6 +237,8 @@ export default function AdminStoriesPage() {
                       {story.createdAt ? new Date(story.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}
                     </TableCell>
                     <TableCell className="text-right space-x-1">
+                      <Button variant="ghost" size="icon" asChild title="Editar Historia"><Link href={`/admin/stories/edit/${story.id}`}><Edit3 className="h-4 w-4" /></Link></Button>
+                      
                       {story.status === 'pending' && (
                         <>
                           <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleStoryStatusChange(story.id, 'approved')} disabled={isProcessingStory} title="Aprobar">
@@ -250,6 +253,11 @@ export default function AdminStoriesPage() {
                          <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-700" onClick={() => handleStoryStatusChange(story.id, 'rejected')} disabled={isProcessingStory} title="Rechazar/Despublicar">
                             <XCircle className="h-4 w-4" />
                           </Button>
+                      )}
+                      {story.status !== 'pending' && (
+                        <Button variant="ghost" size="icon" className="text-yellow-600 hover:text-yellow-700" onClick={() => handleStoryStatusChange(story.id, 'pending')} disabled={isProcessingStory} title="Revertir a Pendiente">
+                          <Undo2 className="h-4 w-4" />
+                        </Button>
                       )}
                        <AlertDialog>
                         <AlertDialogTrigger asChild>

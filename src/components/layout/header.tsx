@@ -148,6 +148,8 @@ export function Header() {
   const logoPositioning = appearanceSettings?.logoPositioning || 0;
   const showBrandName = appearanceSettings?.showBrandNameHeader || false;
   const brandName = appearanceSettings?.brandNameFooter || siteConfig.name;
+  const brandNameColor = appearanceSettings?.brandNameHeaderColor || '#FFFFFF';
+
 
   let displayLiveButton = false;
   if (!isLoadingSettings && liveStreamVisibility !== 'disabled') {
@@ -188,7 +190,10 @@ export function Header() {
               )
             }
              {showBrandName && (
-              <span className={cn("font-headline text-xl font-bold hidden md:inline-block", logoUrlToDisplay ? "ml-3" : "ml-0")}>
+              <span 
+                className={cn("font-headline text-xl font-bold hidden md:inline-block", logoUrlToDisplay ? "ml-3" : "ml-0")}
+                style={{ color: brandNameColor }}
+              >
                 {brandName}
               </span>
             )}

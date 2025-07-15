@@ -23,6 +23,7 @@ export const courseSchema = z.object({
   price: z.string().min(1, { message: "El precio es requerido." }),
   duration: z.string().min(1, { message: "La duración es requerida." }),
   date: z.string().optional(),
+  thumbnailUrl: z.string().url({ message: "Por favor, introduce una URL de imagen válida." }).optional().or(z.literal('')),
   imageUrl: z.string().url({ message: "Por favor, introduce una URL de imagen válida." }).optional().or(z.literal('')),
   courseVideoUrl: z.string().optional(), // Now a simple string to allow URLs or iframes
   videoPreviewUrl: z.string().optional(), // Now a simple string to allow URLs or iframes
@@ -34,6 +35,7 @@ export interface CourseData {
   price: string;
   duration: string;
   date?: string; 
+  thumbnailUrl?: string; // For admin thumbnail
   imageUrl?: string;
   courseVideoUrl?: string; // For modal playback
   videoPreviewUrl?: string; // For card preview
