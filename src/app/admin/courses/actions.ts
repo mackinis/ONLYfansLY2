@@ -2,7 +2,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { addCourse, deleteCourse, updateCourse, type CourseData, courseSchema } from '@/services/courseService'; // Import courseSchema
+import { addCourse, deleteCourse, updateCourse, type CourseData, courseSchema, updateCoursesOrder } from '@/services/courseService'; // Import courseSchema
 import type { z } from 'zod'; // Import z to use ZodIssue type
 
 // courseSchema is now imported from courseService
@@ -60,5 +60,20 @@ export async function deleteCourseAction(id: string): Promise<ActionResult> {
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error desconocido.';
     return { success: false, message: `Error al eliminar curso: ${errorMessage}` };
+  }
+}
+
+export async function saveCoursesOrderAction(
+  courses: { id: string; order: number }[]
+): Promise<ActionResult> {
+  try {
+    await updateCoursesOrder(courses);
+    revalidatePath('/admin/courses');
+    revalidatePath('/');
+    return { success: true, message: 'Orden de los cursos guardado exitosamente!' };
+  } catch (error) {
+    console.error('Failed to save courses order:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error desconocido.';
+    return { success: false, message: `Error al guardar el orden: ${errorMessage}` };
   }
 }

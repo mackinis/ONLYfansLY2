@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PlusCircle, Edit, Trash2, AlertTriangle } from "lucide-react";
+import { PlusCircle, Edit, Trash2, AlertTriangle, ArrowUp, ArrowDown, Save, Loader2 } from "lucide-react";
 import { getCourses, deleteCourse, type Course } from '@/services/courseService';
 import { useToast } from "@/hooks/use-toast";
-import { deleteCourseAction } from './actions';
+import { deleteCourseAction, saveCoursesOrderAction } from './actions';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +29,8 @@ export default function AdminCoursesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleting, startDeleteTransition] = useTransition();
+  const [isSavingOrder, startSaveOrderTransition] = useTransition();
+  const [isOrderChanged, setIsOrderChanged] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -68,6 +70,47 @@ export default function AdminCoursesPage() {
           description: result.message,
           variant: "destructive",
         });
+      }
+    });
+  };
+
+  const handleMove = (courseId: string, direction: 'up' | 'down') => {
+    const currentIndex = courses.findIndex(c => c.id === courseId);
+    if (currentIndex === -1) return;
+
+    const newCourses = [...courses];
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+
+    if (targetIndex < 0 || targetIndex >= newCourses.length) return;
+
+    // Swap positions
+    [newCourses[currentIndex], newCourses[targetIndex]] = [newCourses[targetIndex], newCourses[currentIndex]];
+
+    // Update order property for all courses
+    const updatedCoursesWithOrder = newCourses.map((course, index) => ({
+      ...course,
+      order: index + 1,
+    }));
+    
+    setCourses(updatedCoursesWithOrder);
+    setIsOrderChanged(true);
+  };
+  
+  const handleSaveOrder = () => {
+    const coursesToSave = courses.map((course, index) => ({
+      id: course.id,
+      order: index + 1,
+    }));
+
+    startSaveOrderTransition(async () => {
+      const result = await saveCoursesOrderAction(coursesToSave);
+      toast({
+        title: result.success ? "¡Éxito!" : "Error",
+        description: result.message,
+        variant: result.success ? "default" : "destructive",
+      });
+      if (result.success) {
+        setIsOrderChanged(false);
       }
     });
   };
@@ -114,11 +157,19 @@ export default function AdminCoursesPage() {
           <h1 className="text-3xl font-headline font-bold text-primary">Gestionar Cursos</h1>
           <p className="text-muted-foreground">Añade, edita y organiza el contenido de los cursos.</p>
         </div>
-        <Button asChild>
-          <Link href="/admin/courses/new">
-            <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Curso
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          {isOrderChanged && (
+            <Button onClick={handleSaveOrder} disabled={isSavingOrder}>
+              {isSavingOrder ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Guardar Orden
+            </Button>
+          )}
+          <Button asChild>
+            <Link href="/admin/courses/new">
+              <PlusCircle className="mr-2 h-4 w-4" /> Añadir Nuevo Curso
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {error && (
@@ -133,7 +184,7 @@ export default function AdminCoursesPage() {
       <Card>
         <CardHeader>
           <CardTitle>Lista de Cursos</CardTitle>
-          <CardDescription>Vista general de todos los cursos disponibles.</CardDescription>
+          <CardDescription>Vista general de todos los cursos disponibles. Usa las flechas para cambiar el orden.</CardDescription>
         </CardHeader>
         <CardContent>
           {courses.length === 0 && !error && !isLoading ? (
@@ -152,7 +203,7 @@ export default function AdminCoursesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {courses.map((course) => (
+                {courses.map((course, index) => (
                   <TableRow key={course.id}>
                     <TableCell>
                       <Image 
@@ -168,6 +219,12 @@ export default function AdminCoursesPage() {
                     <TableCell>{course.price}</TableCell>
                     <TableCell>{course.duration}</TableCell>
                     <TableCell className="text-right">
+                       <Button variant="ghost" size="icon" onClick={() => handleMove(course.id, 'up')} disabled={index === 0 || isSavingOrder} title="Mover hacia arriba">
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleMove(course.id, 'down')} disabled={index === courses.length - 1 || isSavingOrder} title="Mover hacia abajo">
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
                        <Button variant="ghost" size="icon" asChild className="mr-2" title="Editar Curso">
                         <Link href={`/admin/courses/edit/${course.id}`}>
                           <Edit className="h-4 w-4" />
