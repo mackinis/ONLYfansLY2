@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { addCourseAction } from '../actions'; 
 import type { CourseData } from '@/services/courseService';
 import { courseSchema } from '@/services/courseService'; 
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Percent } from 'lucide-react';
 import Link from 'next/link';
 
 type FormData = CourseData;
@@ -30,6 +30,7 @@ export default function AdminNewCoursePage() {
       title: '',
       description: '',
       price: '',
+      finalPrice: '',
       duration: '',
       date: '',
       thumbnailUrl: '',
@@ -88,10 +89,20 @@ export default function AdminNewCoursePage() {
                 {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="price">Precio</Label>
-                <Input id="price" {...register("price")} placeholder="Ej: $99.99 o Gratis" />
+                <Label htmlFor="price">Precio Original</Label>
+                <Input id="price" {...register("price")} placeholder="Ej: $120.00 o Gratis" />
                 {errors.price && <p className="text-sm text-destructive">{errors.price.message}</p>}
               </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="finalPrice" className="flex items-center">
+                <Percent className="mr-2 h-4 w-4 text-muted-foreground" />
+                Precio Final (Opcional)
+              </Label>
+              <Input id="finalPrice" {...register("finalPrice")} placeholder="Ej: $99.99 (dejar vacío si no hay oferta)" />
+              <p className="text-xs text-muted-foreground">Si este precio es menor al original, se mostrará el precio original tachado.</p>
+              {errors.finalPrice && <p className="text-sm text-destructive">{errors.finalPrice.message}</p>}
             </div>
 
             <div className="space-y-2">

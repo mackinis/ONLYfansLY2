@@ -16,29 +16,31 @@ import { z } from 'zod';
 
 const COURSES_COLLECTION = "courses";
 
-// Schema definition updated to be more flexible with video URLs/iframes
+// Schema definition updated for discounts and final price
 export const courseSchema = z.object({
   title: z.string().min(3, { message: "El título debe tener al menos 3 caracteres." }),
   description: z.string().min(10, { message: "La descripción debe tener al menos 10 caracteres." }),
   price: z.string().min(1, { message: "El precio es requerido." }),
+  finalPrice: z.string().optional(), // New optional field for the discount price
   duration: z.string().min(1, { message: "La duración es requerida." }),
   date: z.string().optional(),
   thumbnailUrl: z.string().url({ message: "Por favor, introduce una URL de imagen válida." }).optional().or(z.literal('')),
   imageUrl: z.string().url({ message: "Por favor, introduce una URL de imagen válida." }).optional().or(z.literal('')),
-  courseVideoUrl: z.string().optional(), // Now a simple string to allow URLs or iframes
-  videoPreviewUrl: z.string().optional(), // Now a simple string to allow URLs or iframes
+  courseVideoUrl: z.string().optional(),
+  videoPreviewUrl: z.string().optional(),
 });
 
 export interface CourseData {
   title: string;
   description: string;
   price: string;
+  finalPrice?: string; // New optional field for the discount price
   duration: string;
   date?: string; 
-  thumbnailUrl?: string; // For admin thumbnail
+  thumbnailUrl?: string; 
   imageUrl?: string;
-  courseVideoUrl?: string; // For modal playback
-  videoPreviewUrl?: string; // For card preview
+  courseVideoUrl?: string; 
+  videoPreviewUrl?: string; 
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
